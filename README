@@ -1,0 +1,9 @@
+# Binding Energy Validation 
+
+Will contain everything required to run the binding energy analysis.
+
+
+### Prerequisites
+
+- [GCC](https://gcc.gnu.org/): Again, should be on the cluster. GCC 4.8.5 will be fine.
+- [ROOT6](https://root.cern/install/): A version should be on the cluster.
