@@ -4,10 +4,10 @@ CXXFLAGS=-I$(IDIR) `root-config --cflags --libs`
 
 ODIR=obj
 
-_DEPS= fileSys.h limits.h classes.h sims.h
+_DEPS= fileSys.h limits.h classes.h sims.h histEdit.h kinematics.h
 DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 
-_OBJ= poly.o fileSys.o neut.o limits.o
+_OBJ= poly.o fileSys.o neut.o limits.o histEdit.o kinematics.o
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
 $(ODIR)/%.o: src/%.cc $(DEPS)

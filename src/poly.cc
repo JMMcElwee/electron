@@ -20,6 +20,8 @@
 #include "limits.h"
 #include "classes.h"
 #include "sims.h"
+#include "histEdit.h"
+#include "kinematics.h"
 
 
 
@@ -271,6 +273,24 @@ int main(int argc, char *argv[]){
 
 
 
+  // === HISTOGRAM PREP =======================================
+
+  // --- NEUT ----
+  if (isNEUT){
+    xsecScale(neutSim.GetQ0(), angSel, isNEUT);
+    hist_format(neutSim.GetQ0(), 1, 4);
+
+    xsecScale(neutSim.GetQE(), angSel, isNEUT);
+    hist_format(neutSim.GetQE(), 1, 2);
+  }
+
+
+  // ==========================================================
+
+
+
+
+
   // === FITTING ==============================================
 
   if (plotFits){
@@ -283,7 +303,18 @@ int main(int argc, char *argv[]){
     std::cout << "\033[1m========================================\033[0m" 
 	      << std::endl;
 
+
+    // --- Fit NEUT -----
+    if (isNEUT){
+      std::cout << "==============================================\n\033[1mHist Fit NEUT\033[0m"
+		<< std::endl;
+      neutSim.GetQ0()->Fit(someFitHist.c_str(),"FM","",enRange[0],enRange[1]);
+      neutSim.GetQ0()->GetFunction(someFitHist.c_str())->SetLineColor(kBlue);  
+      std::cout << "==============================================" << std::endl;
+    }
+  
   }
+
 
   // ==========================================================
 
@@ -310,12 +341,91 @@ int main(int argc, char *argv[]){
   if (plotFits) fitGraph->Draw("psame");
 
 
+  // --- Plot MC (if available) -----
+  if (isNEUT){ 
+    //   neutSim.GetQE()->Draw("histSAME");
+    neutSim.GetQ0()->Draw("histSAME");
+    if (plotFits) neutSim.GetQ0()->GetFunction(someFitHist.c_str())->Draw("same");
+  } 
+
+
   // ==========================================================
 
 
 
 
-  // === PLOTTING =============================================
+  // === CALCULATE EB SHIFT ===================================
+
+  float maxData,maxNEUT,
+    shiftNEUT,
+    q3;
+
+  char printMaxNEUT[40],
+    printQ3[40];
+
+  // --- Get Maxima ----- 
+  if (plotFits) {
+    maxData = fitGraph->GetFunction(someFitData.c_str())->GetMaximumX();
+    q3 = q3Calc(enSel,maxData,angSel);
+    sprintf(printQ3, "q3 = %0.4f", q3);
+
+    if (isNEUT) {
+      maxNEUT = neutSim.GetQ0()->GetFunction(someFitHist.c_str())->GetMaximumX();
+      shiftNEUT = maxData - maxNEUT;
+      sprintf(printMaxNEUT, "NEUT = %0.4f", shiftNEUT);
+    }
+
+  }
+
+  // ==========================================================
+
+
+
+  // === GRAPH FORMATTING =====================================
+
+  float position = 0.8;
+
+  // --- Set graph printing -----
+  if (plotFits){    
+    TText *q3Text = new TText(0.5,position,printQ3);
+    q3Text->SetNDC();
+    q3Text->SetTextSize(20);
+    q3Text->SetTextFont(43);
+    q3Text->Draw();
+
+    if (isNEUT){
+      position -= 0.05;
+      TText *neutText = new TText(0.5,position,printMaxNEUT);
+      neutText->SetNDC();
+      neutText->SetTextSize(20);
+      neutText->SetTextFont(43);
+      neutText->Draw();
+    }
+
+  }
+
+
+  // ==========================================================
+
+
+
+
+  // === FIT PARAMETERS =======================================
+
+  if (plotFits){
+    std::ofstream outputq3;
+    outputq3.open(_saveq3.c_str());
+    outputq3 << std::setprecision(4) <<  enSel << "\t" << angSel << "\t"
+	     << q3 << "\t"; 
+    
+    if (isNEUT) {
+      outputq3 << std::setprecision(4) << "\t" << shiftNEUT;
+    }
+
+    outputq3 << "\n";
+
+    outputq3.close();  
+  }
 
   // ==========================================================
 
@@ -326,9 +436,12 @@ int main(int argc, char *argv[]){
   TLegend *plotLeg = new TLegend(0.795,0.78,0.945,0.93);
   plotLeg->AddEntry(eScatDat, "(e,e') Data", "p");
 
+  if (isNEUT) plotLeg->AddEntry(neutSim.GetQ0(), "NEUT", "l");
+
   plotLeg->Draw();
 
   // ==========================================================
+
 
   c1.Print(_saving.c_str());
 
