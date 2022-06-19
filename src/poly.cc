@@ -18,6 +18,7 @@
 
 #include "fileSys.h"
 #include "limits.h"
+#include "classes.h"
 
 
 

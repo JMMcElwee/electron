@@ -4,7 +4,7 @@ CXXFLAGS=-I$(IDIR) `root-config --cflags --libs`
 
 ODIR=obj
 
-_DEPS= fileSys.h limits.h
+_DEPS= fileSys.h limits.h classes.h
 DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 
 _OBJ= poly.o fileSys.o limits.o
