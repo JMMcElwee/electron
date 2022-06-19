@@ -2,6 +2,22 @@ IDIR=./include
 CXX=g++
 CXXFLAGS=-I$(IDIR) `root-config --cflags --libs`
 
+ODIR=obj
 
-poly: src/*.cc
-	$(CXX) $(CXXFLAGS) $? -o $@
+_DEPS= fileSys.h
+DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
+
+_OBJ= poly.o fileSys.o
+OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
+
+$(ODIR)/%.o: src/%.cc $(DEPS)
+	$(CXX) -c -o $@ $< $(CXXFLAGS)
+
+poly: $(OBJ)
+	$(CXX) $(CXXFLAGS) $^ -o $@
+
+
+.PHONY: clean
+
+clean:
+	rm -f poly $(ODIR)/*.o *~ core $(INCDIR)/*~
