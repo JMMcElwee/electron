@@ -19,6 +19,7 @@
 #include "fileSys.h"
 #include "limits.h"
 #include "classes.h"
+#include "sims.h"
 
 
 
@@ -29,6 +30,9 @@ int main(int argc, char *argv[]){
 
   // --- Default Files -----
   std::string eDataName = "./data/12C.root";
+
+  std::string eNEUT = "";
+  bool isNEUT = false;
 
 
   // --- Default values -----
@@ -48,7 +52,7 @@ int main(int argc, char *argv[]){
   // --- Read command line -----
   int argCount = 0;
   int opt;
-  while ((opt = getopt(argc, argv, ":hvfE:a:d:p:P:")) != -1){
+  while ((opt = getopt(argc, argv, ":hvfE:a:d:p:P:n:")) != -1){
     switch (opt)
       {
       case 'h':
@@ -74,6 +78,10 @@ int main(int argc, char *argv[]){
 	break;
       case 'p':
 	polFitData = optarg;
+	break;
+      case 'n':
+	isNEUT = true;
+	eNEUT = optarg;
 	break;
       case ':':
 	printf("\033[1;31m[ERROR]\033[0m -%c requires an argument.\n",optopt);
@@ -101,6 +109,11 @@ int main(int argc, char *argv[]){
     return 0;
   }
 
+  if(isNEUT && !exist(eNEUT)){
+    std::cout << "\033[31;1m[ERROR]\033[0m No input NEUT QE data; please supply NEUT electron file." << std::endl;
+    return 0;
+  }
+
   // ==========================================================
 
 
@@ -114,6 +127,8 @@ int main(int argc, char *argv[]){
   std::string _saving = _directory + "e_"
     + std::to_string(static_cast<int>(enSel*1000)) + "_"
     + std::to_string(static_cast<int>(angSel));
+
+  if (isNEUT) _saving = _saving + "_NEUT";
 
   if (plotFits) _saving += "_fits";
 
@@ -206,7 +221,6 @@ int main(int argc, char *argv[]){
 	      << "\033[0m" << std::endl;
   }
 
-
   
   // --- Fitting data -----
   std::vector<float>fitVectorX, fitVectorY;
@@ -235,6 +249,12 @@ int main(int argc, char *argv[]){
   float eData_maxX = xvalues[max_location];
 
 
+  // --- Set Monte Carlo limits -----
+  float enRange[2] = {0,0};
+  if (isNEUT) MClims(enSel, angSel, enRange);
+
+
+
   // ==========================================================
 
 
@@ -243,6 +263,9 @@ int main(int argc, char *argv[]){
 
   float hist_lims[2] = {0,0.5};
   if (eDq0.back() > 0.5) hist_lims[1] = eDq0.back() + 0.05;
+
+  Simulation neutSim;
+  if (isNEUT) neutSim = neut(eNEUT, angSel, hist_lims, enRange, false, verbose);
 
   // ==========================================================
 
