@@ -4,10 +4,10 @@ CXXFLAGS=-I$(IDIR) `root-config --cflags --libs`
 
 ODIR=obj
 
-_DEPS= fileSys.h
+_DEPS= fileSys.h limits.h
 DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 
-_OBJ= poly.o fileSys.o
+_OBJ= poly.o fileSys.o limits.o
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
 $(ODIR)/%.o: src/%.cc $(DEPS)
@@ -20,4 +20,4 @@ poly: $(OBJ)
 .PHONY: clean
 
 clean:
-	rm -f poly $(ODIR)/*.o *~ core $(INCDIR)/*~
+	rm -f poly $(ODIR)/*.o *~ core src/*~ $(INCDIR)/*~
