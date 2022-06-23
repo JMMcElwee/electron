@@ -264,7 +264,8 @@ int main(int argc, char *argv[]){
   // === PROCESS DATA =========================================
 
   float hist_lims[2] = {0,0.5};
-  if (eDq0.back() > 0.5) hist_lims[1] = eDq0.back() + 0.05;
+  //  if (eDq0.back() > 0.5) hist_lims[1] = eDq0.back() + 0.05;
+  hist_lims[1] = eDq0.back() + 0.05;
 
   Simulation neutSim;
   if (isNEUT) neutSim = neut(eNEUT, angSel, hist_lims, enRange, false, verbose);
@@ -277,10 +278,10 @@ int main(int argc, char *argv[]){
 
   // --- NEUT ----
   if (isNEUT){
-    xsecScale(neutSim.GetQ0(), angSel, isNEUT);
+    xsecScale(neutSim.GetQ0(), angSel, isNEUT, eData_max);
     hist_format(neutSim.GetQ0(), 1, 4);
 
-    xsecScale(neutSim.GetQE(), angSel, isNEUT);
+    xsecScale(neutSim.GetQE(), angSel, isNEUT, eData_max);
     hist_format(neutSim.GetQE(), 1, 2);
   }
 

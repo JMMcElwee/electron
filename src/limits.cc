@@ -215,23 +215,23 @@ void MClims(float enSel, float angSel, float *ERange){
     ERange[1] = 0.089;
   }
   else if (enSel < 0.321 && enSel > 0.319 && angSel > 40){
-    ERange[0] = 0.0415;
-    ERange[1] = 0.130;
+    ERange[0] = 0.054;
+    ERange[1] = 0.115;
   }
   else if (enSel > 0.360 && enSel < 0.362 && angSel > 40){
-    ERange[0] = 0.050;
+    ERange[0] = 0.054;
     ERange[1] = 0.132;
   }
   else if (enSel > 0.399 && enSel < 0.4001 && angSel < 40){
-    ERange[0] = 0.042;
-    ERange[1] = 0.103;
+    ERange[0] = 0.046;
+    ERange[1] = 0.098;
   }
   else if (enSel > 0.400 && enSel < 0.402 && angSel > 40){
     ERange[0] = 0.058;
     ERange[1] = 0.150;
   }
   else if (enSel > 0.439 && enSel < 0.441 && angSel > 40){
-    ERange[0] = 0.062;
+    ERange[0] = 0.063;
     ERange[1] = 0.173;
   }
   else if (enSel > 0.479 && enSel < 0.481 && angSel < 40){
@@ -259,8 +259,8 @@ void MClims(float enSel, float angSel, float *ERange){
     ERange[1] = 0.218;
   }
   else if (enSel > 0.559 && enSel < 0.561 && angSel > 130){
-    ERange[0] = 0.273;
-    ERange[1] = 0.365;
+    ERange[0] = 0.276;
+    ERange[1] = 0.363;
   }
   else if (enSel > 0.619 && enSel < 0.621 && angSel < 40){
     ERange[0] = 0.073;
@@ -275,7 +275,7 @@ void MClims(float enSel, float angSel, float *ERange){
     ERange[1] = 0.160;
   }
   else if (enSel > 0.679 && enSel < 0.681 && angSel > 40){
-    ERange[0] = 0.150;
+    ERange[0] = 0.154;
     ERange[1] = 0.278;
   }
   else if (enSel > 0.699 && enSel < 0.701 && angSel < 40){
@@ -363,7 +363,7 @@ void MClims(float enSel, float angSel, float *ERange){
     ERange[1] = 0.235;
   }
   else if (enSel > 2.019 && enSel < 2.021 && angSel > 17){
-    ERange[0] = 0.190;
+    ERange[0] = 0.194;
     ERange[1] = 0.340;
   }
   else if (enSel > 2.129 && enSel < 2.131 && angSel < 17){

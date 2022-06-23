@@ -13,7 +13,7 @@
 
 #include "TH1F.h"
 
-void xsecScale(TH1F *hist, float angSel, bool isNEUT){
+void xsecScale(TH1F *hist, float angSel, bool isNEUT, double data_max){
 
   // --- Normal Scaling -----
   float cosBinWidth = sin(angSel*M_PI/180) * 2*M_PI/180 * 2*M_PI;
@@ -21,12 +21,13 @@ void xsecScale(TH1F *hist, float angSel, bool isNEUT){
   hist->Scale(1/cosBinWidth,"width"); // nb/sr/GeV
   hist->Scale(12); // per nucleon
 
+  hist->Scale(data_max/hist->GetMaximum());
   
-  // --- Change NEUT ----- 
+  /*  // --- Change NEUT ----- 
   if (isNEUT) {
     hist->Scale(2*(1/pow(137,2))*(1/pow(1.1664E-5,2))*4*M_PI*M_PI); // weak->EM
-    hist->Scale(0.5); // CC->NC*/
-  }
+    hist->Scale(0.5); // CC->NC
+  }*/
 
 }
 
